@@ -18,6 +18,7 @@
 
 # Go workspace file
 go.work
+bloomFilterPassword.json
 
 ### macOS ###
 # General
@@ -26,7 +27,7 @@ go.work
 .LSOverride
 
 ### react ###
-node_modules/
+/client/node_modules/
 
 # Ignore npm logs
 npm-debug.log*
