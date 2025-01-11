@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	controller "github.com/sulavpanthi/BloomFilterPasswordChecker/internal/controller/http"
 	"github.com/sulavpanthi/BloomFilterPasswordChecker/internal/usecase"
@@ -21,6 +22,8 @@ func main() {
 	bloomFilterHandler := controller.NewBloomFilterHandler(bloomFilterUseCase)
 
 	app := gin.Default()
+
+	app.Use(cors.Default())
 
 	app.POST("/add", bloomFilterHandler.AddPassword)
 
