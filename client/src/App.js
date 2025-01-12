@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import BloomFilter from "./utils/BloomFilter";
+import "./App.css";
 
 const App = () => {
   const [bloomFilter, setBloomFilter] = useState(null);
@@ -67,7 +68,7 @@ const App = () => {
   const handleCheck = () => {
     if (bloomFilter) {
       const result = bloomFilter.checkPassword(password);
-      const message = result ? 'Password might be common!' : 'Password is not common and can be used.'
+      const message = result ? 'Password is too common. Choose a stronger one.' : 'This password is safe to use.'
       setSearchAndSaveResult(message);
     }
     else {
@@ -110,35 +111,36 @@ const App = () => {
   };
 
   return (
-    <div>
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+    <div className="screen">
+      {loading && <p className="loading">Loading...</p>}
+      {error && <p className="error">Error: {error}</p>}
       {bloomFilter && (
-          <div style={{ margin: '20px', fontFamily: 'Arial, sans-serif' }}>
-            <h1>Password Check</h1>
-            <div>
-              <label htmlFor="password">Enter your password:</label>
-              <br />
-              <input
-                type="text"
-                id="password"
-                value={password}
-                onChange={handlePasswordChange}
-                style={{ margin: '10px 0', padding: '5px', width: '300px' }}
-              />
-            </div>
-            <div>
-              <button onClick={handleCheck} style={{ marginRight: '10px', padding: '5px 10px' }}>
-                Check
-              </button>
-              <button onClick={handleSave} style={{ padding: '5px 10px' }}>
-                Save
-              </button>
-              <div>
-                <p>{ searchAndSaveResult }</p>
-              </div>
-            </div>
+        <div className="card">
+          <h1>Check your password</h1>
+          <div className="input-container">
+            <label htmlFor="password">Enter your password:</label>
+            <br />
+            <input
+              type="text"
+              id="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
           </div>
+          <div className="button-container">
+            <button onClick={handleCheck} className="button">
+              Check
+            </button>
+            <button onClick={handleSave} className="button">
+              Save
+            </button>
+          </div>
+          {searchAndSaveResult && (
+            <div className="message-container">
+              <p className={`result-message ${searchAndSaveResult.includes("too common") ? "error" : "success"}`}>{searchAndSaveResult}</p>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
