@@ -3,8 +3,8 @@ import BloomFilter from "./utils/BloomFilter";
 
 const App = () => {
   const [bloomFilter, setBloomFilter] = useState(null);
-  const [password, setPassword] = useState('');
-  const [searchResult, setSearchResult] = useState(null);
+  const [password, setPassword] = useState("");
+  const [searchAndSaveResult, setSearchAndSaveResult] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
@@ -44,7 +44,7 @@ const App = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const result = response.json();
+        const result = await response.json();
         const { bitArray, bitArraySize, hashFunctionCount } = result;
         const filter = new BloomFilter(bitArray, bitArraySize, hashFunctionCount);
         setBloomFilter(filter);
@@ -60,23 +60,24 @@ const App = () => {
   }, []);
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    setPassword(String(e.target.value));
   };
     
-  const handleCheck = (password) => {
+  const handleCheck = () => {
     if (bloomFilter) {
       const result = bloomFilter.checkPassword(password);
-      setSearchResult(result ? 'Password might be common!' : 'Password is not common and can be used.');
+      const message = result ? 'Password might be common!' : 'Password is not common and can be used.'
+      setSearchAndSaveResult(message);
     }
     else {
       setError('Bloom Filter not found');
     }
   }
     
-  const handleSave = (password) => {
+  const handleSave = () => {
     if (bloomFilter) {
       bloomFilter.addPassword(password);
-      setSearchResult("Password is added as common password.")
+      setSearchAndSaveResult("Password is added as common password.")
     }
     else {
       setError('Bloom Filter not found');
@@ -95,7 +96,7 @@ const App = () => {
               <label htmlFor="password">Enter your password:</label>
               <br />
               <input
-                type="password"
+                type="text"
                 id="password"
                 value={password}
                 onChange={handlePasswordChange}
@@ -109,6 +110,9 @@ const App = () => {
               <button onClick={handleSave} style={{ padding: '5px 10px' }}>
                 Save
               </button>
+              <div>
+                <p>{ searchAndSaveResult }</p>
+              </div>
             </div>
           </div>
       )}

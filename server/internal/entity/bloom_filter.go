@@ -7,7 +7,6 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/sulavpanthi/BloomFilterPasswordChecker/pkg/appcontext"
-	"github.com/twmb/murmur3"
 )
 
 type BloomFilter struct {
@@ -46,14 +45,30 @@ func New(expectedElements uint64, falsePositiveProbability float64) *BloomFilter
 	return bloomFilter
 }
 
+func fnv1Hash64(input string, seed uint64) uint64 {
+	log := appcontext.Get().Logger
+	// TODO: Move this prime value to config
+	prime := uint64(0x100000001B3) // FNV-1 64-bit prime
+	hash := seed
+
+	for i := 0; i < len(input); i++ {
+		hash ^= uint64(input[i])
+		hash *= prime
+	}
+	log.Info().Uint64("hash before returning", hash).Msg("log := appcontext.Get().Logger")
+	return hash
+}
+
 func (bf *BloomFilter) Add(word string) {
+
+	log := appcontext.Get().Logger
 
 	// TODO: Use strategy design pattern here
 	var i uint64
 	for ; i < bf.HashFunctionCount; i++ {
-		hash := murmur3.SeedNew64(i)
-		_, _ = hash.Write([]byte(word))
-		bit := hash.Sum64() % bf.BitArraySize
+		hash := fnv1Hash64(word, i)
+		bit := hash % bf.BitArraySize
+		log.Info().Uint64("bit", bit).Msg("Bit to set is- ")
 		bf.BitArray[bit] = true
 	}
 }
@@ -63,9 +78,9 @@ func (bf *BloomFilter) Check(word string) bool {
 	// TODO: Use strategy design pattern here
 	var i uint64
 	for ; i < bf.HashFunctionCount; i++ {
-		hash := murmur3.SeedNew64(i)
-		_, _ = hash.Write([]byte(word))
-		bit := hash.Sum64() % bf.BitArraySize
+		hash := fnv1Hash64(word, i)
+		bit := hash % bf.BitArraySize
+		log.Info().Uint64("bit", bit).Msg("Bit to set is- ")
 		if !bf.BitArray[bit] {
 			return false
 		}
