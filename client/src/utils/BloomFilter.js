@@ -1,11 +1,11 @@
 
 function fnv1Hash64(input, seed) {
+    // TODO: Fetch this prime from either API or env
     const prime = BigInt(0x100000001B3); // FNV-1 64-bit prime
     let hash = BigInt(seed);
 
     for (let i = 0; i < input.length; i++) {
         hash ^= BigInt(input.charCodeAt(i));
-        console.log("i and hash", i, hash)
         hash *= prime;
 
         // *NOTE: Keep hash within 64-bit range by applying modulo

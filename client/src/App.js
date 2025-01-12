@@ -40,6 +40,7 @@ const App = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        // TODO: Get this url from env file
         const response = await fetch('http://localhost:8000/bloom-filter');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -73,10 +74,34 @@ const App = () => {
       setError('Bloom Filter not found');
     }
   }
+
+  const postToBackend = async () => {
+    const data = {
+      "password": password
+    }
+    try {
+      // TODO: Get this url from env file
+      const response = await fetch('http://localhost:8000/add', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("Password added as common password to backend as well...", result)
+    } catch (err) {
+      setError(err.message)
+    }
+  }
     
   const handleSave = () => {
     if (bloomFilter) {
       bloomFilter.addPassword(password);
+      postToBackend();
       setSearchAndSaveResult("Password is added as common password.")
     }
     else {
