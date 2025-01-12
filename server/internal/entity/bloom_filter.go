@@ -75,6 +75,8 @@ func (bf *BloomFilter) Add(word string) {
 
 func (bf *BloomFilter) Check(word string) bool {
 
+	log := appcontext.Get().Logger
+
 	// TODO: Use strategy design pattern here
 	var i uint64
 	for ; i < bf.HashFunctionCount; i++ {
