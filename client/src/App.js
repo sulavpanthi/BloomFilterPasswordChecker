@@ -113,7 +113,6 @@ const App = () => {
     <div>
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-      <p>Signup page</p>
       {bloomFilter && (
           <div style={{ margin: '20px', fontFamily: 'Arial, sans-serif' }}>
             <h1>Password Check</h1>
