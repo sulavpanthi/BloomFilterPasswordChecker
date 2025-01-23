@@ -13,7 +13,7 @@ const App = () => {
   // const loadBloomFilter = async () => {
   //   try {
   //     setLoading(true);
-  //     const response = await fetch(`${process.env.BACKEND_BASE_URL}/bloom-filter`);
+  //     const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/bloom-filter`);
   //     if (!response.ok) {
   //       throw new Error('Failed to fetch bloom filter');
   //     }
@@ -42,7 +42,7 @@ const App = () => {
       try {
         setLoading(true);
         // TODO: Get this url from env file
-        const response = await fetch(`${process.env.BACKEND_BASE_URL}/bloom-filter`);
+        const response = await fetch(process.env.REACT_APP_BACKEND_BASE_URL + "/bloom-filter");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -82,7 +82,7 @@ const App = () => {
     }
     try {
       // TODO: Get this url from env file
-      const response = await fetch(`${process.env.BACKEND_BASE_URL}/add`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
